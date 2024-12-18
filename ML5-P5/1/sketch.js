@@ -3,7 +3,7 @@ let video;
 let faces = [];
 let options = { maxFaces: 2, refineLandmarks: false, flipHorizontal: false };
 let eyeGlass = "./images/eyeglass1.png";
-let moustache1 = "./images/moustache1.png";
+let moustache1 = "./images/moustache2.png";
 let leftXYZ = {};
 let middleXYZ = {};
 let rightXYZ = {};
@@ -34,7 +34,7 @@ function draw() {
     let face = faces[i];
     //35:sol, 265:Sağ, 6:Orta
 
-    let img1_width =  face.keypoints[35].x - face.keypoints[265].x; let img1_height = 45;
+    let img1_width =  face.keypoints[35].x - face.keypoints[265].x - 15; let img1_height = 40;
     image(img1, face.keypoints[6].x + (img1_width/2), face.keypoints[6].y - (img1_height/2) + 10, img1_width, img1_height); 
 
     let img2_width =  100; let img2_height = 20;
