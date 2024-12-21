@@ -1,3 +1,7 @@
+# Gayet güzel olmuş
+# javascript ile yaptığım çalışmalara da bakıver.
+# Pazartesi görüşelim.
+
 import cv2
 import mediapipe as mp
 import time
