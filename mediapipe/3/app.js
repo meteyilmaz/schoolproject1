@@ -54,7 +54,7 @@ import { HandLandmarker, FilesetResolver, DrawingUtils } from "https://cdn.jsdel
                         ctx.arc(indexFingerTip.x * canvas.width, indexFingerTip.y * canvas.height, 10, 0, 2 * Math.PI);
                         ctx.fillStyle = "red";
                         ctx.fill();
-                        console.log(thumbTip);
+                        // console.log(thumbTip);
                         drawingUtils.drawLandmarks(landmarks, { color: "#FFF", radius: 1 });
                         
                     });
