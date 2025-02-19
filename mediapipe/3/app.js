@@ -59,7 +59,7 @@ import { HandLandmarker, FilesetResolver, DrawingUtils } from "https://cdn.jsdel
                         
                     });
                 }
-                requestAnimationFrame(detectFaces);
+                requestAnimationFrame(detectHands);
             }
 
             detectHands();
