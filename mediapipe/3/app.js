@@ -37,7 +37,7 @@ import { HandLandmarker, FilesetResolver, DrawingUtils } from "https://cdn.jsdel
             const handLandmarker = await loadHandLandmarker();
             const drawingUtils = new DrawingUtils(ctx);
 
-            function detectFaces() {
+            function detectHands() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
@@ -62,7 +62,7 @@ import { HandLandmarker, FilesetResolver, DrawingUtils } from "https://cdn.jsdel
                 requestAnimationFrame(detectFaces);
             }
 
-            detectFaces();
+            detectHands();
         }
 
         main();
