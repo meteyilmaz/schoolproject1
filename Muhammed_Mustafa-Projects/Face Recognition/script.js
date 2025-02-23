@@ -2,10 +2,10 @@ const video = document.getElementById("video");
 const canvas = document.getElementById("canvas");
 
 await Promise.all([
-    faceapi.nets.ssdMobilenetv1.loadFromUri("/MachineLearningProjects/models"),
-    faceapi.nets.faceLandmark68Net.loadFromUri("/MachineLearningProjects/models"),
-    faceapi.nets.faceRecognitionNet.loadFromUri("/MachineLearningProjects/models"),
-    faceapi.nets.ageGenderNet.loadFromUri("/MachineLearningProjects/models"),
+    faceapi.nets.ssdMobilenetv1.loadFromUri("/models"),
+    faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
+    faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
+    faceapi.nets.ageGenderNet.loadFromUri("/models"),
 ]).then(Main);
 
 async function SetupCamera() {
