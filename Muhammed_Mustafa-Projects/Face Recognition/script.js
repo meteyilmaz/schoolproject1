@@ -1,10 +1,11 @@
 const video = document.getElementById("video");
+const canvas = document.getElementById("canvas");
 
 await Promise.all([
-    faceapi.nets.ssdMobilenetv1.loadFromUri("/models"),
-    faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
-    faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
-    faceapi.nets.ageGenderNet.loadFromUri("/models"),
+    faceapi.nets.ssdMobilenetv1.loadFromUri("/MachineLearningProjects/models"),
+    faceapi.nets.faceLandmark68Net.loadFromUri("/MachineLearningProjects/models"),
+    faceapi.nets.faceRecognitionNet.loadFromUri("/MachineLearningProjects/models"),
+    faceapi.nets.ageGenderNet.loadFromUri("/MachineLearningProjects/models"),
 ]).then(Main);
 
 async function SetupCamera() {
@@ -21,7 +22,7 @@ async function SetupCamera() {
 }
 
 async function GetLabeledFaceDescriptions() {
-    const imageFolder = "/Images";
+    const imageFolder = "/MachineLearningProjects/Images";
     const imageFiles = await FetchImageFiles(imageFolder);
     return Promise.all(
       imageFiles.map(async (file) => {
@@ -55,14 +56,10 @@ async function FetchImageFiles(folderPath) {
 async function FaceMatcher() {
     const labeledFaceDescriptors = await GetLabeledFaceDescriptions();
     const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors);
-
-    const canvas = faceapi.createCanvasFromMedia(video);
+    
     canvas.style.position = "absolute";
     canvas.style.top = "0";
     canvas.style.left = "0";
-    canvas.style.width = video.width + "px";
-    canvas.style.height = video.height + "px";
-    document.body.append(canvas);
 
     const displaySize = {width: video.width, height: video.height};
     faceapi.matchDimensions(canvas, displaySize);
