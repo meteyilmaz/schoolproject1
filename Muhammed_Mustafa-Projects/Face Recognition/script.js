@@ -22,11 +22,11 @@ async function SetupCamera() {
 }
 
 async function GetLabeledFaceDescriptions() {
-    const imageFolder = "/MachineLearningProjects/Images";
+    const imageFolder = "/Images";
     const imageFiles = await FetchImageFiles(imageFolder);
     return Promise.all(
       imageFiles.map(async (file) => {
-        const label = file.split(".")[0];
+        const label = file.split(".")[0].replace("%20", " ");
         const img = await faceapi.fetchImage(`${imageFolder}/${file}`);
         const detections = await faceapi
           .detectSingleFace(img)
