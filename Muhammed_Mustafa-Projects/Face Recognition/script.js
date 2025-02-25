@@ -2,10 +2,10 @@ const video = document.getElementById("video");
 const canvas = document.getElementById("canvas");
 
 await Promise.all([
-    faceapi.nets.ssdMobilenetv1.loadFromUri("/models"),
-    faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
-    faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
-    faceapi.nets.ageGenderNet.loadFromUri("/models"),
+    faceapi.nets.ssdMobilenetv1.loadFromUri("../models"),
+    faceapi.nets.faceLandmark68Net.loadFromUri("../models"),
+    faceapi.nets.faceRecognitionNet.loadFromUri("../models"),
+    faceapi.nets.ageGenderNet.loadFromUri("../models"),
 ]).then(Main);
 
 async function SetupCamera() {
@@ -22,7 +22,7 @@ async function SetupCamera() {
 }
 
 async function GetLabeledFaceDescriptions() {
-    const imageFolder = "/Images";
+    const imageFolder = "../images";
     const imageFiles = await FetchImageFiles(imageFolder);
     return Promise.all(
       imageFiles.map(async (file) => {
