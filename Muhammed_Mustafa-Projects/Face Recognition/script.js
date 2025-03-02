@@ -1,5 +1,8 @@
 const video = document.getElementById("video");
 const canvas = document.getElementById("canvas");
+const head_front_img = document.getElementById("head_front_img");
+const ctx = canvas.getContext("2d");
+
 
 await Promise.all([
     faceapi.nets.ssdMobilenetv1.loadFromUri("../models"),
@@ -71,12 +74,13 @@ async function FaceMatcher() {
         .withFaceDescriptors();
 
         const resizedDetections = faceapi.resizeResults(detections, displaySize);
-        canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
-
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(head_front_img, 75, 0, 500, 480);
+        
         const results = resizedDetections.map((result) => {
             return faceMatcher.findBestMatch(result.descriptor)
         });
-
+        
         results.forEach((result, i) => {
             const box = resizedDetections[i].detection.box;
             const drawBox = new faceapi.draw.DrawBox(box, {
