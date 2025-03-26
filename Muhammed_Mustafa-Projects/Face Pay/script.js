@@ -131,6 +131,8 @@ async function FaceMatcher() {
                             label.balance -= cutAmount;
                             resultText.textContent = 
                             `✅ Bakiyenizden ${cutAmount} TL kesildi. | 🟢 Geçebilirsiniz. | 💰 Yeni bakiyeniz: ${label.balance} TL`;
+
+                            window.location.href = "./timer.html";
                         } else {
                             resultText.textContent = `❌ Bakiyeniz yetersiz!!!`;
                         }
