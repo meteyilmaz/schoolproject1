@@ -145,9 +145,8 @@ btn_clear.addEventListener("click", ()=>{
 
     const tbodyRef = document.getElementById('table1').getElementsByTagName('tbody')[0];
     const rowCount = tbodyRef.rows.length; // Get the number of rows
+    for (let i = rowCount - 1; i >= 0; i--) {
+        tbodyRef.deleteRow(i);
+    }
  
-        // Loop through rows in reverse and delete each one
-        for (let i = rowCount - 1; i >= 0; i--) {
-            tbodyRef.deleteRow(i);
-        }
 })
