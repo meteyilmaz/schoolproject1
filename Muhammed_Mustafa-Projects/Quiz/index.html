@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      background: #1e1e2f;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .quiz-container {
+      background: #2c2c3e;
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    }
+    .scoreboard {
+      font-size: 18px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 40px; /* Araya boşluk bırakır */
+    }
+    .scoreboard span {
+      font-weight: bold;
+    }
+    #correctCount {
+      color: #00ff99;
+    }
+    #wrongCount {
+      color: #ff5c5c;
+    }
+    h2 {
+      margin-bottom: 20px;
+    }
+    button {
+      background-color: #4e5af7;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      margin: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.2s ease;
+    }
+    button:hover {
+      background-color: #3c45c4;
+    }
+    .result {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 18px;
+    }
+    .correct-icon::before {
+      content: "✅ ";
+      color: #00ff99;
+    }
+    .wrong-icon::before {
+      content: "❌ ";
+      color: #ff5c5c;
+    }
+  </style>
+  <script type="module" src="./script.js"></script>
+</head>
+<body>
+<div class="quiz-container">
+  <div class="scoreboard">
+    <span id="correctCount" class="correct-icon">Doğru: 0</span>
+    <span id="wrongCount" class="wrong-icon">Yanlış: 0</span>
+  </div>
+  <h2 id="questionText"></h2>
+  <button id="reply1"></button>
+  <button id="reply2"></button>
+  <div class="result" id="resultText"></div>
+</div>
+</body>
+</html>
