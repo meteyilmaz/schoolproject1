@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <title>Quiz</title>
+  <title>Hand Controlled Quiz</title>
   <style>
     * {
       box-sizing: border-box;
@@ -92,7 +92,7 @@
       color: white;
       border: none;
       padding: 20px 35px;
-      margin: 20px;
+      margin: 50px;
       border-radius: 15px;
       cursor: pointer;
       font-size: 24px;
@@ -121,10 +121,17 @@
       content: "❌ ";
       color: #ff5c5c;
     }
+
+    .ball {
+      position: absolute;
+      border-radius: 100%;
+      opacity: 0.7;
+    }
   </style>
   <script type="module" src="./script.js"></script>
 </head>
 <body>
+<h2 style="background-color: #6c706e4b; color: rgb(255, 255, 149);">Hadi Beyin Jimnastiği Yapalım</h2>
 <div class="quiz-container">
   <h2 id="questionText"></h2>
   <button id="reply1"></button>
