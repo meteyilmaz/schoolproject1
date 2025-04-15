@@ -16,6 +16,7 @@ let interactableObjects = [reply1, reply2];
 let isTouching = false;
 let touchStartTime = 0;
 let clicked = false;
+let isClicked = false;
 let isReadyHand = true;
 let questionNumber = 0;
 
@@ -128,8 +129,8 @@ async function Main() {
             results.landmarks.forEach((landmarks) => {
                 const indexFingerTip = landmarks[8];
                 ctx.beginPath();
-                ctx.arc(indexFingerTip.x * canvas.width, indexFingerTip.y * canvas.height, 10, 0, 2 * Math.PI);
-                ctx.fillStyle = "red";
+                ctx.arc(indexFingerTip.x * canvas.width, indexFingerTip.y * canvas.height, isTouching ? 20 : 10, 0, 2 * Math.PI);
+                ctx.fillStyle = isTouching ? "#ab0707" : "red";
                 ctx.fill();
                 
                 for (let i = 0; i < landmarks.length; i++) {
@@ -170,12 +171,24 @@ async function Main() {
                         }
 
                         if (isTouchingNow && !clicked) {
-                            object.click();
                             object.style.backgroundColor = "#a0a6f1";
                             clicked = true;
+                            isClicked = true;
+
+                            if (isClicked && isTouching) {
+                                setTimeout(() => {
+                                    if (isTouching) {
+                                        object.click();
+                                    }
+                                }, 1000);
+                            }
                         }
                     } else {
                         if (isTouchingNow && !clicked) {
+                            for (let i = 0; i < interactableObjects.length; i++) {
+                                interactableObjects[i].style.backgroundColor = "";
+                            }
+
                             isTouching = false;
                             touchStartTime = 0;
                         }
@@ -183,6 +196,10 @@ async function Main() {
                 }
 
                 if (!isTouchingNow) {
+                    for (let i = 0; i < interactableObjects.length; i++) {
+                        interactableObjects[i].style.backgroundColor = "";
+                    }
+
                     isTouching = false;
                     touchStartTime = 0;
                     clicked = false;
