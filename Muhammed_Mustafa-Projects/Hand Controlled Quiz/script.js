@@ -19,7 +19,64 @@ let clicked = false;
 let isReadyHand = true;
 let questionNumber = 0;
 
-async function setupCamera() {
+function BGAnim() {
+    const bgContainer = document.createElement("div");
+    bgContainer.style.position = "fixed";
+    bgContainer.style.top = "0";
+    bgContainer.style.left = "0";
+    bgContainer.style.width = "100vw";
+    bgContainer.style.height = "100vh";
+    bgContainer.style.overflow = "hidden";  
+    bgContainer.style.zIndex = "-1";
+    document.body.appendChild(bgContainer);
+
+    const colors = ["#3CC157", "#2AA7FF", "#1B1B1B", "#FCBC0F", "#F85F36"];
+    const numBalls = 50;
+    const balls = [];
+
+    for (let i = 0; i < numBalls; i++) {
+        let ball = document.createElement("div");
+        ball.classList.add("ball");
+        ball.style.background = colors[Math.floor(Math.random() * colors.length)];
+        let randomLeft = Math.random() * 100;   
+        let randomTop  = Math.random() * 100;     
+        ball.style.left = `${randomLeft}vw`;
+        ball.style.top = `${randomTop}vh`;
+        const scale = Math.random() * 0.8 + 0.4;  
+        ball.style.transform = `scale(${scale})`;
+        let size = Math.random() * 1.5 + 0.5;  
+        ball.style.width = `${size}em`;
+        ball.style.height = ball.style.width;
+        balls.push(ball);
+        bgContainer.appendChild(ball);
+    }
+
+    balls.forEach((el, i) => {
+        let maxTranslateX = 5;
+        let maxTranslateY = 3;
+        let toX = (Math.random() * maxTranslateX) * (Math.random() < 0.5 ? -1 : 1);
+        let toY = (Math.random() * maxTranslateY) * (Math.random() < 0.5 ? -1 : 1);
+        const scaleMatch = el.style.transform.match(/scale\((.*?)\)/);
+        const scaleValue = scaleMatch ? scaleMatch[1] : 1;
+        el.animate(
+            [
+                { transform: `translate(0, 0) scale(${scaleValue})` },
+                { transform: `translate(${toX}rem, ${toY}rem) scale(${scaleValue})` }
+            ],
+            {
+                duration: (Math.random() + 1) * 2000,
+                direction: "alternate",
+                fill: "both",
+                iterations: Infinity,
+                easing: "ease-in-out"
+            }
+        );
+    });
+}
+
+BGAnim();  
+
+async function SetupCamera() {
     try {
         const stream = await navigator.mediaDevices.getUserMedia({
             video: {
@@ -42,7 +99,7 @@ async function setupCamera() {
     }
 }
 
-async function loadHandLandmarker() {
+async function LoadHandLandmarker() {
     const vision = await FilesetResolver.forVisionTasks(
         "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
     );
@@ -52,16 +109,17 @@ async function loadHandLandmarker() {
             modelAssetPath: "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/latest/hand_landmarker.task"
         },
         runningMode: "VIDEO",
+        minHandDetectionConfidence: 0.9,
         numHands: 1,
     });
 }
 
-async function main() {
-    await setupCamera();
-    const handLandmarker = await loadHandLandmarker();
+async function Main() {
+    await SetupCamera();
+    const handLandmarker = await LoadHandLandmarker();
     const drawingUtils = new DrawingUtils(ctx);
 
-    function detectHands() {
+    function DetectHands() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         const results = handLandmarker.detectForVideo(video, performance.now());
@@ -73,7 +131,20 @@ async function main() {
                 ctx.arc(indexFingerTip.x * canvas.width, indexFingerTip.y * canvas.height, 10, 0, 2 * Math.PI);
                 ctx.fillStyle = "red";
                 ctx.fill();
-                drawingUtils.drawLandmarks(landmarks, { color: "#FFF", radius: 1 });
+                
+                for (let i = 0; i < landmarks.length; i++) {
+                    if (i == 4 || i == 12 || i == 16 || i == 20){
+                        ctx.beginPath();
+                        ctx.arc(landmarks[i].x * canvas.width, landmarks[i].y * canvas.height, 10, 0, 2 * Math.PI);
+                        ctx.fillStyle = "green";
+                        ctx.fill();
+                    }                    
+                }
+
+                drawingUtils.drawConnectors(landmarks, HandLandmarker.HAND_CONNECTIONS, {
+                    color: "#00FF00",
+                    lineWidth: 5
+                });
 
                 const canvasRect = canvas.getBoundingClientRect();
                 const fingerX = canvasRect.left + (1 - indexFingerTip.x) * canvasRect.width;
@@ -100,6 +171,7 @@ async function main() {
 
                         if (isTouchingNow && !clicked) {
                             object.click();
+                            object.style.backgroundColor = "#a0a6f1";
                             clicked = true;
                         }
                     } else {
@@ -118,15 +190,15 @@ async function main() {
             });
         }
 
-        requestAnimationFrame(detectHands);
+        requestAnimationFrame(DetectHands);
     }
 
-    detectHands();
+    DetectHands();
 }
 
-main();
+Main();
 
-function setupQuestion() {
+function SetupQuestion() {
     let question = questions[questionNumber];
 
     questionText.textContent = question.question;
@@ -136,20 +208,22 @@ function setupQuestion() {
     
     reply1.textContent = question.options[randomIndex1];
     reply2.textContent = question.options[randomIndex2];
+    reply1.style.backgroundColor = "";
+    reply2.style.backgroundColor = "";
     resultText.textContent = "";
 
     document.body.style.backgroundColor = bgColors.normalColor;
     resultText.style.backgroundColor = "#2c2c3e";
 
-    reply1.onclick = function () { checkAnswer(reply1.textContent, question.answer) };
-    reply2.onclick = function () { checkAnswer(reply2.textContent, question.answer) };
+    reply1.onclick = function () { CheckAnswer(reply1.textContent, question.answer) };
+    reply2.onclick = function () { CheckAnswer(reply2.textContent, question.answer) };
 
     setTimeout(() => {
         isReadyHand = true;
     }, 1000);
 }
 
-function checkAnswer(reply, correctAnswer) {
+function CheckAnswer(reply, correctAnswer) {
     if (reply == correctAnswer) {
         resultText.textContent = "Doğru Cevap";
         document.body.style.backgroundColor = bgColors.greenColor;
@@ -167,10 +241,10 @@ function checkAnswer(reply, correctAnswer) {
     questionNumber += 1;
 
     if (questionNumber < questions.length) {
-        setTimeout(setupQuestion, 3000);
+        setTimeout(SetupQuestion, 3000);
     } else {
         resultText.textContent = "Quiz Bitti";
     }
 }
 
-setupQuestion();
+SetupQuestion();
