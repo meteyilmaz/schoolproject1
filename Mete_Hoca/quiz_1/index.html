@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Landmarker with MediaPipe</title>
+
+    <style>
+        video {
+            clear: both;
+            display: block;
+            transform: rotateY(180deg);
+            -webkit-transform: rotateY(180deg);
+            -moz-transform: rotateY(180deg);
+        }
+
+        .output_canvas {
+            transform: rotateY(180deg);
+            -webkit-transform: rotateY(180deg);
+            -moz-transform: rotateY(180deg);
+          }
+    </style>
+</head>
+<body>
+    <video id="webcam" style="position: abso" autoplay playsinline></video>
+    <canvas class="output_canvas" id="output_canvas" style="position: absolute; left: 0px; top: 0px;"></canvas>
+    
+    <script type="module" src="./app.js"></script>
+</body>
+</html>
