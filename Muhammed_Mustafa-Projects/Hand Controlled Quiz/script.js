@@ -9,18 +9,17 @@ const questionText = document.getElementById("questionText");
 const reply1 = document.getElementById("reply1");
 const reply2 = document.getElementById("reply2");
 const resultText = document.getElementById("resultText");
-const correctCountText = document.getElementById("correctCount");
-const wrongCountText = document.getElementById("wrongCount");
+
+const bgColors = {"normalColor": "#1e1e2f", "redColor": "#ff4a2a", "greenColor": "#07cf08"};
 
 let interactableObjects = [reply1, reply2];
 let isTouching = false;
 let touchStartTime = 0;
 let clicked = false;
+let isReadyHand = true;
 let questionNumber = 0;
-let correctCount = 0;
-let wrongCount = 0;
 
-async function SetupCamera() {
+async function setupCamera() {
     try {
         const stream = await navigator.mediaDevices.getUserMedia({
             video: {
@@ -43,7 +42,7 @@ async function SetupCamera() {
     }
 }
 
-async function LoadHandLandmarker() {
+async function loadHandLandmarker() {
     const vision = await FilesetResolver.forVisionTasks(
         "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
     );
@@ -57,19 +56,18 @@ async function LoadHandLandmarker() {
     });
 }
 
-async function Main() {
-    await SetupCamera();
-    const handLandmarker = await LoadHandLandmarker();
+async function main() {
+    await setupCamera();
+    const handLandmarker = await loadHandLandmarker();
     const drawingUtils = new DrawingUtils(ctx);
 
-    function DetectHands() {
+    function detectHands() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         const results = handLandmarker.detectForVideo(video, performance.now());
 
-        if (results.landmarks) {
+        if (results.landmarks && isReadyHand) {
             results.landmarks.forEach((landmarks) => {
-                const thumbTip = landmarks[4];
                 const indexFingerTip = landmarks[8];
                 ctx.beginPath();
                 ctx.arc(indexFingerTip.x * canvas.width, indexFingerTip.y * canvas.height, 10, 0, 2 * Math.PI);
@@ -98,7 +96,6 @@ async function Main() {
                         if (isTouchingNow && !isTouching) {
                             touchStartTime = performance.now();
                             isTouching = true;
-                            object.style.backgroundColor = "lightgreen";
                         }
 
                         if (isTouchingNow && !clicked) {
@@ -109,17 +106,11 @@ async function Main() {
                         if (isTouchingNow && !clicked) {
                             isTouching = false;
                             touchStartTime = 0;
-                            object.style.backgroundColor = "";
                         }
                     }
                 }
 
                 if (!isTouchingNow) {
-                    for (let i = 0; i < interactableObjects.length; i++) {
-                        const object = interactableObjects[i];
-                        object.style.backgroundColor = "";
-                    }
-
                     isTouching = false;
                     touchStartTime = 0;
                     clicked = false;
@@ -127,15 +118,15 @@ async function Main() {
             });
         }
 
-        requestAnimationFrame(DetectHands);
+        requestAnimationFrame(detectHands);
     }
 
-    DetectHands();
+    detectHands();
 }
 
-Main();
+main();
 
-function SetupQuestion() {
+function setupQuestion() {
     let question = questions[questionNumber];
 
     questionText.textContent = question.question;
@@ -147,28 +138,39 @@ function SetupQuestion() {
     reply2.textContent = question.options[randomIndex2];
     resultText.textContent = "";
 
-    reply1.onclick = function () { CheckAnswer(reply1.textContent, question.answer) };
-    reply2.onclick = function () { CheckAnswer(reply2.textContent, question.answer) };
+    document.body.style.backgroundColor = bgColors.normalColor;
+    resultText.style.backgroundColor = "#2c2c3e";
+
+    reply1.onclick = function () { checkAnswer(reply1.textContent, question.answer) };
+    reply2.onclick = function () { checkAnswer(reply2.textContent, question.answer) };
+
+    setTimeout(() => {
+        isReadyHand = true;
+    }, 1000);
 }
 
-function CheckAnswer(reply, correctAnswer) {
+function checkAnswer(reply, correctAnswer) {
     if (reply == correctAnswer) {
         resultText.textContent = "Doğru Cevap";
-        correctCount += 1;
-        correctCountText.textContent = "Doğru: " + correctCount;
+        document.body.style.backgroundColor = bgColors.greenColor;
+        resultText.style.backgroundColor = bgColors.greenColor;
+        resultText.style.color = "#fff";
+        isReadyHand = false;
     } else {
         resultText.textContent = "Yanlış Cevap";
-        wrongCount += 1;
-        wrongCountText.textContent = "Yanlış: " + wrongCount;
+        document.body.style.backgroundColor = bgColors.redColor;
+        resultText.style.backgroundColor = bgColors.redColor;
+        resultText.style.color = "#fff";
+        isReadyHand = false;
     }
 
     questionNumber += 1;
 
     if (questionNumber < questions.length) {
-        setTimeout(SetupQuestion, 2000);
+        setTimeout(setupQuestion, 3000);
     } else {
         resultText.textContent = "Quiz Bitti";
     }
 }
 
-SetupQuestion();
+setupQuestion();
