@@ -18,6 +18,8 @@
       margin: 0;
     }
     .quiz-container {
+      position: relative;
+      z-index: 1;
       background: #2c2c3e;
       padding: 30px;
       border-radius: 15px;
@@ -25,13 +27,14 @@
       width: 90%;
       max-width: 400px;
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
     }
     .scoreboard {
       font-size: 18px;
       margin-bottom: 20px;
       display: flex;
       justify-content: center;
-      gap: 40px; /* Araya boşluk bırakır */
+      gap: 40px;
     }
     .scoreboard span {
       font-weight: bold;
@@ -41,6 +44,32 @@
     }
     #wrongCount {
       color: #ff5c5c;
+    }
+    #video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+    #canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: auto;
+      z-index: 0;
+      pointer-events: none;
+      -moz-transform: scaleX(-1);
+      -o-transform: scaleX(-1);
+      -webkit-transform: scaleX(-1);
+      transform: scaleX(-1);
+      filter: FlipH;
+      -ms-filter: "FlipH";
     }
     h2 {
       margin-bottom: 20px;
@@ -54,6 +83,7 @@
       border-radius: 8px;
       cursor: pointer;
       font-size: 16px;
+      z-index: 1;
       transition: background-color 0.2s ease;
     }
     button:hover {
@@ -85,6 +115,9 @@
   <button id="reply1"></button>
   <button id="reply2"></button>
   <div class="result" id="resultText"></div>
+
+  <video id="video" autoplay sinline width="640" height="480" style="display: none;"></video>
+  <canvas id="canvas" width="640" height="480"></canvas>
 </div>
 </body>
 </html>
