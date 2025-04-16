@@ -106,7 +106,7 @@ async function LoadHandLandmarker() {
         },
         runningMode: "VIDEO",
         minHandDetectionConfidence: 0.9,
-        numHands: 1,
+        numHands: 3,
     });
 }
 
