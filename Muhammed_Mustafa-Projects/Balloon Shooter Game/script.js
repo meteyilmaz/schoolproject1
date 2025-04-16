@@ -4,7 +4,8 @@ const video = document.getElementById("video");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-const poppedBalloonNumberText = document.getElementById("poppedBalloonNumberText");
+const targetBalloonImage = document.getElementById("targetBalloonImage");
+const scoreText = document.getElementById("scoreText");
 
 let isTouching = false;
 let touchStartTime = 0;
@@ -13,7 +14,8 @@ let isClicked = false;
 let isReadyHand = true;
 
 const balloons = [];
-let poppedBalloonNumber = 0;
+let targetBalloonColor;
+let score = 0;
 
 function BGAnim() {
     const bgContainer = document.createElement("div");
@@ -171,8 +173,16 @@ async function Main() {
                             if (isClicked && isTouching) {
                                 balloon.remove();
                                 balloons.splice(i, 1);
-                                poppedBalloonNumber += 1;
-                                poppedBalloonNumberText.textContent = poppedBalloonNumber;
+
+                                if (balloon.style.backgroundColor == targetBalloonColor) {
+                                    score += 1;
+                                } else {
+                                    if (score > 0) {
+                                        score -= 1;
+                                    }
+                                }
+
+                                scoreText.textContent = "Puan: " + score;
                             }
                         }
                     } else {
@@ -193,6 +203,14 @@ async function Main() {
                     CreateBalloons();
                 }
             });
+
+            const hasTargetBalloon = balloons.some(balloon => balloon.style.backgroundColor === targetBalloonColor);
+
+            if (!hasTargetBalloon) {
+                balloons.forEach(balloon => balloon.remove());
+                balloons.length = 0;
+                CreateBalloons();
+            }
         }
 
         requestAnimationFrame(DetectHands);
@@ -206,25 +224,68 @@ Main();
 function CreateBalloons() {
     const gameContainer = document.querySelector(".game-container");
     const colors = ["red", "blue", "green", "yellow", "purple", "orange", "pink", "cyan", "lime", "white"];
+    const padding = 60;
     let balloonCount = 10;
 
-    for (let i = 0; i < balloonCount; i++) {
+    targetBalloonColor = colors[Math.floor(Math.random() * colors.length)];
+    targetBalloonImage.style.backgroundColor = targetBalloonColor;
+
+    let targetBalloonCount = Math.floor(balloonCount / 2);
+    let nonTargetBalloonCount = balloonCount - targetBalloonCount;
+    const placedBalloons = [];
+
+    function isOverlapping(x, y, width, height) {
+        return placedBalloons.some(({ left, top, w, h }) =>
+            x < left + w &&
+            x + width > left &&
+            y < top + h &&
+            y + height > top
+        );
+    }
+
+    function createBalloon(color) {
         const balloon = document.createElement("div");
         balloon.style.position = "absolute";
         balloon.style.width = "50px";
         balloon.style.height = "70px";
         balloon.style.borderRadius = "50%";
-        balloon.style.backgroundColor = colors[i % colors.length];
-        balloon.style.left = `${Math.random() * (gameContainer.offsetWidth - 50)}px`;
-        balloon.style.top = `${Math.random() * (gameContainer.offsetHeight - 50)}px`;
+        balloon.style.backgroundColor = color;
         balloon.style.boxShadow = "0 0 10px rgba(255,255,255,0.8)";
         balloon.style.transition = "left 0.5s linear, top 0.5s linear";
 
+        const string = document.createElement("div");
+        string.style.position = "absolute";
+        string.style.width = "2px";
+        string.style.height = "20px";
+        string.style.backgroundColor = "#000";
+        string.style.bottom = "-20px";
+        string.style.left = "50%";
+        string.style.transform = "translateX(-50%)";
+
+        balloon.appendChild(string);
+
+        let left, top;
+        do {
+            left = Math.random() * (gameContainer.offsetWidth - padding * 2 - 50) + padding;
+            top = Math.random() * (gameContainer.offsetHeight - padding * 2 - 70) + padding;
+        } while (isOverlapping(left, top, 50, 70));
+
+        balloon.style.left = `${left}px`;
+        balloon.style.top = `${top}px`;
+
+        placedBalloons.push({ left, top, w: 50, h: 70 });
+
         const smoothMovement = () => {
-            const currentLeft = parseFloat(balloon.style.left);
-            const currentTop = parseFloat(balloon.style.top);
-            const newLeft = Math.max(0, Math.min(gameContainer.offsetWidth - 50, currentLeft + (Math.random() * 20 - 10)));
-            const newTop = Math.max(0, Math.min(gameContainer.offsetHeight - 70, currentTop + (Math.random() * 20 - 10)));
+            let currentLeft = parseFloat(balloon.style.left);
+            let currentTop = parseFloat(balloon.style.top);
+            let newLeft = Math.max(
+                padding,
+                Math.min(gameContainer.offsetWidth - padding - 50, currentLeft + (Math.random() * 20 - 10))
+            );
+            let newTop = Math.max(
+                padding,
+                Math.min(gameContainer.offsetHeight - padding - 70, currentTop + (Math.random() * 20 - 10))
+            );
             balloon.style.left = `${newLeft}px`;
             balloon.style.top = `${newTop}px`;
         };
@@ -234,6 +295,16 @@ function CreateBalloons() {
         balloons.push(balloon);
         gameContainer.appendChild(balloon);
     }
-}
 
-CreateBalloons();
+    for (let i = 0; i < targetBalloonCount; i++) {
+        createBalloon(targetBalloonColor);
+    }
+
+    for (let i = 0; i < nonTargetBalloonCount; i++) {
+        let color;
+        do {
+            color = colors[Math.floor(Math.random() * colors.length)];
+        } while (color === targetBalloonColor);
+        createBalloon(color);
+    }
+}
