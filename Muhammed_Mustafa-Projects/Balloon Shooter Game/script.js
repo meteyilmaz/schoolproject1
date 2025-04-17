@@ -7,6 +7,8 @@ const ctx = canvas.getContext("2d");
 const targetBalloonImage = document.getElementById("targetBalloonImage");
 const scoreText = document.getElementById("scoreText");
 
+const popSound = new Audio("popSound.wav");
+
 let isTouching = false;
 let touchStartTime = 0;
 let clicked = false;
@@ -173,6 +175,7 @@ async function Main() {
                             if (isClicked && isTouching) {
                                 balloon.remove();
                                 balloons.splice(i, 1);
+                                popSound.play();
 
                                 if (balloon.style.backgroundColor == targetBalloonColor) {
                                     score += 1;
@@ -243,26 +246,47 @@ function CreateBalloons() {
         );
     }
 
-    function createBalloon(color) {
+    function CreateBalloon(color) {
         const balloon = document.createElement("div");
         balloon.style.position = "absolute";
-        balloon.style.width = "50px";
-        balloon.style.height = "70px";
-        balloon.style.borderRadius = "50%";
+        balloon.style.width = "70px";
+        balloon.style.height = "80px";
+        balloon.style.borderRadius = "75% 75% 70% 70%";
         balloon.style.backgroundColor = color;
-        balloon.style.boxShadow = "0 0 10px rgba(255,255,255,0.8)";
         balloon.style.transition = "left 0.5s linear, top 0.5s linear";
+        balloon.style.boxShadow = "-7px -3px 10px rgba(0, 0, 0,0.7)";
+        balloon.style.boxShadow = "-7px -3px 10px rgba(0, 0, 0,0.7) inset";
 
-        const string = document.createElement("div");
-        string.style.position = "absolute";
-        string.style.width = "2px";
-        string.style.height = "20px";
-        string.style.backgroundColor = "#000";
-        string.style.bottom = "-20px";
-        string.style.left = "50%";
-        string.style.transform = "translateX(-50%)";
+        const rope = document.createElement("div");
+        rope.style.content = "";
+        rope.style.height = "35px";
+        rope.style.width = "1px";
+        rope.style.padding = "1px";
+        rope.style.backgroundColor = "#FDFD96";
+        rope.style.display = "block";
+        rope.style.position = "absolute";
+        rope.style.top = "85px";
+        rope.style.left = "0";
+        rope.style.right = "0";
+        rope.style.margin = "auto";
+        rope.style.zIndex = "-2";
 
-        balloon.appendChild(string);
+        const underBalloon = document.createElement("div");
+        underBalloon.style.width = "0";
+        underBalloon.style.height = "0";
+        underBalloon.style.borderLeft = "5px solid transparent";
+        underBalloon.style.borderRight = "5px solid transparent";
+        underBalloon.style.borderBottom = `10px solid ${color}`;
+        underBalloon.style.position = "absolute";
+        underBalloon.style.top = "78px";
+        underBalloon.style.left = "50%";
+        underBalloon.style.transform = "translateX(-50%)";
+        underBalloon.style.boxShadow = "-7px -3px 10px rgba(0, 0, 0,0.7)";
+        underBalloon.style.boxShadow = "-7px -3px 10px rgba(0, 0, 0,0.7) inset";
+        underBalloon.style.zIndex = "-1";
+
+        balloon.appendChild(rope);
+        balloon.appendChild(underBalloon);
 
         let left, top;
         do {
@@ -297,7 +321,7 @@ function CreateBalloons() {
     }
 
     for (let i = 0; i < targetBalloonCount; i++) {
-        createBalloon(targetBalloonColor);
+        CreateBalloon(targetBalloonColor);
     }
 
     for (let i = 0; i < nonTargetBalloonCount; i++) {
@@ -305,6 +329,6 @@ function CreateBalloons() {
         do {
             color = colors[Math.floor(Math.random() * colors.length)];
         } while (color === targetBalloonColor);
-        createBalloon(color);
+        CreateBalloon(color);
     }
 }
