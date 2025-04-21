@@ -4,8 +4,12 @@ const video = document.getElementById("video");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+const gameContainer = document.getElementsByClassName("game-container");
 const targetBalloonImage = document.getElementById("targetBalloonImage");
 const scoreText = document.getElementById("scoreText");
+const heartNumberText = document.getElementById("heartNumberText");
+const highScoreText = document.getElementById("highScoreText");
+const gameOverText = document.getElementById("gameOverText");
 
 const popSound = new Audio("./Sounds/popSound.wav");
 const transitionSound = new Audio("./Sounds/transitionSound.wav");
@@ -15,6 +19,8 @@ let isTouching = false;
 const balloons = [];
 let targetBalloonColor;
 let score = 0;
+let heartNumber = 10;
+let highScore = 0;
 
 function BGAnim() {
     const bgContainer = document.createElement("div");
@@ -139,7 +145,7 @@ async function Main() {
 
                 drawingUtils.drawConnectors(landmarks, HandLandmarker.HAND_CONNECTIONS, {
                     color: "#00FF00",
-                    lineWidth: 5
+                    lineWidth: 7
                 });
 
                 const canvasRect = canvas.getBoundingClientRect();
@@ -166,12 +172,35 @@ async function Main() {
                         if (balloon.style.backgroundColor == targetBalloonColor) {
                             score += 5;
                         } else {
+                            if (heartNumber > 0) {
+                                heartNumber -= 1;
+                            } else {
+                                if (score > highScore) {
+                                    highScore = score;
+                                    highScoreText.textContent = "En yüksek skor: " + highScore;
+                                }
+
+                                gameOverText.style.display = "block";
+
+                                setTimeout(() => {
+                                    gameOverText.style.display = "none";
+                                    balloons.forEach(balloon => balloon.remove());
+                                    balloons.length = 0;
+                                    CreateBalloons();
+                                    transitionSound.play();
+                                    score = 0;
+                                    heartNumber = 10;
+                                }, 3000);
+                            }
+
                             if (score > 0) {
                                 score -= 3;
+                                score = score < 0 ? 0 : score;
                             }
                         }
 
                         scoreText.textContent = "Puan: " + score;
+                        heartNumberText.textContent = heartNumber;
                         break;
                     } else {
                         isTouching = false;
