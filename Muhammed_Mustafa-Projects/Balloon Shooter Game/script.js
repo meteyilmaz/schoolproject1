@@ -4,20 +4,23 @@ const video = document.getElementById("video");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+const gameContainer = document.getElementsByClassName("game-container");
 const targetBalloonImage = document.getElementById("targetBalloonImage");
 const scoreText = document.getElementById("scoreText");
+const heartNumberText = document.getElementById("heartNumberText");
+const highScoreText = document.getElementById("highScoreText");
+const gameOverText = document.getElementById("gameOverText");
 
-const popSound = new Audio("popSound.wav");
+const popSound = new Audio("./Sounds/popSound.wav");
+const transitionSound = new Audio("./Sounds/transitionSound.wav");
 
 let isTouching = false;
-let touchStartTime = 0;
-let clicked = false;
-let isClicked = false;
-let isReadyHand = true;
 
 const balloons = [];
 let targetBalloonColor;
 let score = 0;
+let heartNumber = 10;
+let highScore = 0;
 
 function BGAnim() {
     const bgContainer = document.createElement("div");
@@ -124,10 +127,11 @@ async function Main() {
 
         const results = handLandmarker.detectForVideo(video, performance.now());
 
-        if (results.landmarks && isReadyHand) {
+        if (results.landmarks) {
             results.landmarks.forEach((landmarks) => {
                 const thumbFingerTip = landmarks[4];
                 const indexFingerTip = landmarks[8];
+
                 ctx.beginPath();
                 ctx.arc(thumbFingerTip.x * canvas.width, thumbFingerTip.y * canvas.height, isTouching ? 20 : 10, 0, 2 * Math.PI);
                 ctx.arc(indexFingerTip.x * canvas.width, indexFingerTip.y * canvas.height, isTouching ? 20 : 10, 0, 2 * Math.PI);
@@ -141,69 +145,71 @@ async function Main() {
 
                 drawingUtils.drawConnectors(landmarks, HandLandmarker.HAND_CONNECTIONS, {
                     color: "#00FF00",
-                    lineWidth: 9
+                    lineWidth: 7
                 });
 
                 const canvasRect = canvas.getBoundingClientRect();
                 const fingerX = canvasRect.left + (1 - indexFingerTip.x) * canvasRect.width;
                 const fingerY = canvasRect.top + indexFingerTip.y * canvasRect.height;
 
-                let isTouchingNow = false;
-
                 for (let i = 0; i < balloons.length; i++) {
                     const balloon = balloons[i];
                     const balloonRect = balloon.getBoundingClientRect();
 
                     if (
-                        distance < 0.06 &&
+                        distance < 0.04 &&
                         fingerX >= balloonRect.left &&
                         fingerX <= balloonRect.right &&
                         fingerY >= balloonRect.top &&
                         fingerY <= balloonRect.bottom
                     ) {
-                        isTouchingNow = true;
+                        isTouching = true;
 
-                        if (isTouchingNow && !isTouching) {
-                            touchStartTime = performance.now();
-                            isTouching = true;
-                        }
+                        balloon.remove();
+                        balloons.splice(i, 1);
+                        popSound.play();
 
-                        if (isTouchingNow && !clicked) {
-                            clicked = true;
-                            isClicked = true;
-
-                            if (isClicked && isTouching) {
-                                balloon.remove();
-                                balloons.splice(i, 1);
-                                popSound.play();
-
-                                if (balloon.style.backgroundColor == targetBalloonColor) {
-                                    score += 1;
-                                } else {
-                                    if (score > 0) {
-                                        score -= 1;
-                                    }
+                        if (balloon.style.backgroundColor == targetBalloonColor) {
+                            score += 5;
+                        } else {
+                            if (heartNumber > 0) {
+                                heartNumber -= 1;
+                            } else {
+                                if (score > highScore) {
+                                    highScore = score;
+                                    highScoreText.textContent = "En yüksek skor: " + highScore;
                                 }
 
-                                scoreText.textContent = "Puan: " + score;
+                                gameOverText.style.display = "block";
+
+                                setTimeout(() => {
+                                    gameOverText.style.display = "none";
+                                    balloons.forEach(balloon => balloon.remove());
+                                    balloons.length = 0;
+                                    CreateBalloons();
+                                    transitionSound.play();
+                                    score = 0;
+                                    heartNumber = 10;
+                                }, 3000);
+                            }
+
+                            if (score > 0) {
+                                score -= 3;
+                                score = score < 0 ? 0 : score;
                             }
                         }
-                    } else {
-                        if (isTouchingNow && !clicked) {
-                            isTouching = false;
-                            touchStartTime = 0;
-                        }
-                    }
-                }
 
-                if (!isTouchingNow) {
-                    isTouching = false;
-                    touchStartTime = 0;
-                    clicked = false;
+                        scoreText.textContent = "Puan: " + score;
+                        heartNumberText.textContent = heartNumber;
+                        break;
+                    } else {
+                        isTouching = false;
+                    }
                 }
 
                 if (balloons.length <= 0) {
                     CreateBalloons();
+                    transitionSound.play();
                 }
             });
 
@@ -213,6 +219,7 @@ async function Main() {
                 balloons.forEach(balloon => balloon.remove());
                 balloons.length = 0;
                 CreateBalloons();
+                transitionSound.play();
             }
         }
 

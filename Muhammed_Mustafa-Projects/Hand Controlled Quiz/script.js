@@ -12,12 +12,16 @@ const resultText = document.getElementById("resultText");
 
 const bgColors = {"normalColor": "#1e1e2f", "redColor": "#ff4a2a", "greenColor": "#07cf08"};
 
+const correctSound = new Audio("./Sounds/correctSound.wav");
+const wrongSound = new Audio("./Sounds/wrongSound.wav");
+
 let interactableObjects = [reply1, reply2];
 let isTouching = false;
 let touchStartTime = 0;
 let clicked = false;
 let isClicked = false;
 let isReadyHand = true;
+let handTimeOut = 0;
 let questionNumber = 0;
 
 function BGAnim() {
@@ -176,7 +180,7 @@ async function Main() {
                             isClicked = true;
 
                             if (isClicked && isTouching) {
-                                setTimeout(() => {
+                                handTimeOut = setTimeout(() => {
                                     if (isTouching) {
                                         object.click();
                                     }
@@ -246,21 +250,25 @@ function CheckAnswer(reply, correctAnswer) {
         document.body.style.backgroundColor = bgColors.greenColor;
         resultText.style.backgroundColor = bgColors.greenColor;
         resultText.style.color = "#fff";
+        correctSound.play();
         isReadyHand = false;
     } else {
         resultText.textContent = "Yanlış Cevap";
         document.body.style.backgroundColor = bgColors.redColor;
         resultText.style.backgroundColor = bgColors.redColor;
         resultText.style.color = "#fff";
+        wrongSound.play();
         isReadyHand = false;
     }
 
     questionNumber += 1;
+    clearTimeout(handTimeOut);
 
     if (questionNumber < questions.length) {
         setTimeout(SetupQuestion, 3000);
     } else {
-        resultText.textContent = "Quiz Bitti";
+        questionNumber = 0;
+        SetupQuestion();
     }
 }
 
