@@ -141,7 +141,7 @@ async function Main() {
 
                 drawingUtils.drawConnectors(landmarks, HandLandmarker.HAND_CONNECTIONS, {
                     color: "#00FF00",
-                    lineWidth: 5
+                    lineWidth: 9
                 });
 
                 const canvasRect = canvas.getBoundingClientRect();
@@ -155,7 +155,7 @@ async function Main() {
                     const balloonRect = balloon.getBoundingClientRect();
 
                     if (
-                        distance < 0.05 &&
+                        distance < 0.06 &&
                         fingerX >= balloonRect.left &&
                         fingerX <= balloonRect.right &&
                         fingerY >= balloonRect.top &&
