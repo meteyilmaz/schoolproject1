@@ -4,12 +4,10 @@ const video = document.getElementById("video");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-const gameContainer = document.getElementsByClassName("game-container");
 const targetBalloonImage = document.getElementById("targetBalloonImage");
 const scoreText = document.getElementById("scoreText");
 const heartNumberText = document.getElementById("heartNumberText");
 const highScoreText = document.getElementById("highScoreText");
-const gameOverText = document.getElementById("gameOverText");
 
 const popSound = new Audio("./Sounds/popSound.wav");
 const transitionSound = new Audio("./Sounds/transitionSound.wav");
@@ -21,6 +19,9 @@ let targetBalloonColor;
 let score = 0;
 let heartNumber = 10;
 let highScore = 0;
+
+highScore = localStorage.getItem("highScore");
+highScoreText.textContent = "En yüksek skor: " + highScore;
 
 function BGAnim() {
     const bgContainer = document.createElement("div");
@@ -174,23 +175,24 @@ async function Main() {
                         } else {
                             if (heartNumber > 0) {
                                 heartNumber -= 1;
+
+                                if (heartNumber <= 0) {
+                                    if (score > highScore) {
+                                        highScore = score;
+                                    }
+
+                                    localStorage.setItem("score", score);
+                                    localStorage.setItem("highScore", highScore);
+
+                                    setTimeout(() => {
+                                        window.location.href = "gameOver.html";
+                                    }, 1000);
+                                }
                             } else {
                                 if (score > highScore) {
                                     highScore = score;
                                     highScoreText.textContent = "En yüksek skor: " + highScore;
                                 }
-
-                                gameOverText.style.display = "block";
-
-                                setTimeout(() => {
-                                    gameOverText.style.display = "none";
-                                    balloons.forEach(balloon => balloon.remove());
-                                    balloons.length = 0;
-                                    CreateBalloons();
-                                    transitionSound.play();
-                                    score = 0;
-                                    heartNumber = 10;
-                                }, 3000);
                             }
 
                             if (score > 0) {
