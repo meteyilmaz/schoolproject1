@@ -11,6 +11,11 @@ function preload() {
 
 function setup() {
   createCanvas(640, 480);
+
+  h1 = createElement('h1', "Merhaba arkadaş...");
+  h1.position(200, 300)
+
+
   // Create the webcam video and hide it
   video = createCapture(VIDEO);
   video.size(640, 480);
@@ -20,6 +25,7 @@ function setup() {
   
   // Load the triangle indices for drawing the mesh
   triangles = faceMesh.getTriangles();
+
 }
 
 function draw() {
@@ -42,10 +48,10 @@ function draw() {
       stroke(0, 0, 255);
       strokeWeight(1);
       triangle(pointA.x, pointA.y, pointB.x, pointB.y, pointC.x, pointC.y);
-
-    //   console.log(pointA.x);
-      
+      stroke(0, 255, 0);
+      circle(face.faceOval.centerX, face.faceOval.centerY, 20);
     }
+    // console.log(face);
   }
 }
 

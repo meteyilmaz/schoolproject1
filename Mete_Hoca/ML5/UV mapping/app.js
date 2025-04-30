@@ -60,6 +60,8 @@ function draw() {
       vertex(a.x, a.y, uvA.x, uvA.y);
       vertex(b.x, b.y, uvB.x, uvB.y);
       vertex(c.x, c.y, uvC.x, uvC.y);
+      console.log(indexA);
+      
     }
     endShape();
   }
