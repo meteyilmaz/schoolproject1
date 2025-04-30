@@ -68,10 +68,10 @@ async function Main() {
                         scaledHeight = 25;
                     }
 
-                    console.log(headPosDistance);
+                    // console.log(headPosDistance);
 
                     ctx.drawImage(image, x - scaledWidth / 2, y - scaledHeight / 2, scaledWidth, scaledHeight);
-                }                
+                }
             });
         }
 

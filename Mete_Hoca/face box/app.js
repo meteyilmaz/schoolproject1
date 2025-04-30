@@ -64,6 +64,10 @@ import { FaceDetector, FilesetResolver, DrawingUtils } from "https://cdn.jsdeliv
                         ctx.fillText("Yüz Tanıma Oranı:%"+Math.round(score) , x, y - 10);
                         ctx.font = "30px Verdana";
                         ctx.stroke();
+
+                        ctx.beginPath();
+                        ctx.arc(detection.keypoints[1].x*100, detection.keypoints[1].y*100, 50, 0, 2 * Math.PI);
+                        ctx.stroke();
                         
                         
                         // const thumbTip = landmarks[4]; // **Baş parmak ucu**
