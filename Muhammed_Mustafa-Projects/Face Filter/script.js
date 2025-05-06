@@ -1,21 +1,23 @@
-import {FaceLandmarker, FilesetResolver, DrawingUtils} from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest";
+import { FaceLandmarker, FilesetResolver } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest";
 
 const video = document.getElementById("video");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 let image = new Image();
-image.src = "./Images/skullClasp.png";
+image.src = "./Images/glasses.png";
+
+let imageName = image.src.split('/').pop().split('.').shift();
 
 async function SetupCamera() {
     try {
-        const stream = await navigator.mediaDevices.getUserMedia({video: true});
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
         video.srcObject = stream;
         return new Promise((resolve) => {
             video.onloadedmetadata = () => resolve(video);
         });
     } catch (error) {
-        console.error("Kamera Erişimi Reddedildi: ", error)
+        console.error("Kamera Erişimi Reddedildi: ", error);
     }
 }
 
@@ -35,7 +37,6 @@ async function LoadFaceLandmarker() {
 async function Main() {
     await SetupCamera();
     const faceLandmarker = await LoadFaceLandmarker();
-    const drawingUtils = new DrawingUtils(ctx);
 
     function DetectFaces() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -45,32 +46,48 @@ async function Main() {
 
         if (results.faceLandmarks) {
             results.faceLandmarks.forEach((landmarks) => {
-                if (landmarks[103]) {
-                    const x = landmarks[103].x * canvas.width;
-                    const y = landmarks[103].y * canvas.height;
+                if (imageName == "glasses") {
+                    const leftEye = landmarks[33];
+                    const rightEye = landmarks[263];
 
-                    let scaledWidth = 50;
-                    let scaledHeight = 50;
+                    const x = ((leftEye.x + rightEye.x) / 2) * canvas.width;
+                    const y = landmarks[168].y * canvas.height;
 
-                    let headPos1 = landmarks[10];
-                    let headPos2 = landmarks[152];
-
-                    let headPosDistance = Math.sqrt(
-                        Math.pow(headPos2.x - headPos1.x, 2) +
-                        Math.pow(headPos2.y - headPos1.y, 2)
+                    const eyeDistance = Math.sqrt(
+                        Math.pow(rightEye.x - leftEye.x, 2) + Math.pow(rightEye.y - leftEye.y, 2)
                     );
 
-                    if (headPosDistance >= 0.4) {
-                        scaledWidth = 100;
-                        scaledHeight = 100;
-                    } else if (headPosDistance <= 0.25) {
-                        scaledWidth = 25;
-                        scaledHeight = 25;
-                    }
+                    let scaledWidth = eyeDistance * canvas.width * 1.5;
+                    let scaledHeight = scaledWidth * 1;
 
-                    // console.log(headPosDistance);
+                    let rotationAngle = Math.atan2(rightEye.y - leftEye.y, rightEye.x - leftEye.x);
 
-                    ctx.drawImage(image, x - scaledWidth / 2, y - scaledHeight / 2, scaledWidth, scaledHeight);
+                    ctx.save();
+                    ctx.translate(x, y);
+                    ctx.rotate(rotationAngle);
+                    ctx.drawImage(image, -scaledWidth / 2, -scaledHeight / 2, scaledWidth, scaledHeight);
+                    ctx.restore();
+                } else if (imageName == "skullClasp") {
+                    const leftEye = landmarks[103];
+                    const rightEye = landmarks[67];
+
+                    const x = ((leftEye.x + rightEye.x) / 2) * canvas.width;
+                    const y = landmarks[67].y * canvas.height;
+
+                    const eyeDistance = Math.sqrt(
+                        Math.pow(rightEye.x - leftEye.x, 2) + Math.pow(rightEye.y - leftEye.y, 2)
+                    );
+
+                    let scaledWidth = eyeDistance * canvas.width * 1.5;
+                    let scaledHeight = scaledWidth * 1;
+
+                    let rotationAngle = Math.atan2(rightEye.y - leftEye.y, rightEye.x - leftEye.x);
+
+                    ctx.save();
+                    ctx.translate(x, y);
+                    ctx.rotate(rotationAngle);
+                    ctx.drawImage(image, -scaledWidth / 2, -scaledHeight / 2, scaledWidth, scaledHeight);
+                    ctx.restore();
                 }
             });
         }
