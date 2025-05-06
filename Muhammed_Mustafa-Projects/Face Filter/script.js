@@ -5,7 +5,8 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 let image = new Image();
-image.src = "./Images/glasses.png";
+image.src = "./Images/toka1.png";
+// image.src = "./Images/skullClasp.png";
 
 let imageName = image.src.split('/').pop().split('.').shift();
 
@@ -46,7 +47,7 @@ async function Main() {
 
         if (results.faceLandmarks) {
             results.faceLandmarks.forEach((landmarks) => {
-                if (imageName == "glasses") {
+                if (imageName == "toka1") {
                     const leftEye = landmarks[33];
                     const rightEye = landmarks[263];
 
@@ -72,7 +73,7 @@ async function Main() {
                     const rightEye = landmarks[67];
 
                     const x = ((leftEye.x + rightEye.x) / 2) * canvas.width;
-                    const y = landmarks[67].y * canvas.height;
+                    const y = rightEye.y * canvas.height;
 
                     const eyeDistance = Math.sqrt(
                         Math.pow(rightEye.x - leftEye.x, 2) + Math.pow(rightEye.y - leftEye.y, 2)

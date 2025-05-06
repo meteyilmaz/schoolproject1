@@ -7,7 +7,8 @@ let img;
 
 function preload() {
   faceMesh = ml5.faceMesh({ maxFaces: 1 });
-  img = loadImage("./Masks/anonymousmask.png");
+
+  img = loadImage("./Masks/upmask"+parseInt(random(1,4))+".png");
 }
 
 function gotFaces(results) {
