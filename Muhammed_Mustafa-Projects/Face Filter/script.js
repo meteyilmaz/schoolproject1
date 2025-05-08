@@ -65,10 +65,10 @@ async function Main() {
     const faceLandmarker = await LoadFaceLandmarker();
     const faceAnalysis = await FaceAnalysis();
 
-    if (faceAnalysis.gender == "female") {
+    if (faceAnalysis.gender == "male") {
         image.src = `./Images/${maleImagesNameList[Math.floor(Math.random() * maleImagesNameList.length)]}.png`;
         imageName = image.src.split('/').pop().split('.').shift();
-    } else if (faceAnalysis.gender == "male") {
+    } else if (faceAnalysis.gender == "female") {
         image.src = `./Images/${femaleImagesNameList[Math.floor(Math.random() * femaleImagesNameList.length)]}.png`;
         imageName = image.src.split('/').pop().split('.').shift();
     }
@@ -81,7 +81,7 @@ async function Main() {
 
         if (results.faceLandmarks && faceAnalysis) {
             results.faceLandmarks.forEach((landmarks) => {
-                if (faceAnalysis.gender == "female") {
+                if (faceAnalysis.gender == "male") {
                     if (moustachesNameList.includes(imageName)) {
                         const leftPos = landmarks[57];
                         const rightPos = landmarks[287];
@@ -125,7 +125,7 @@ async function Main() {
                         ctx.drawImage(image, -scaledWidth / 2, -scaledHeight / 2, scaledWidth, scaledHeight);
                         ctx.restore();
                     }
-                } else if (faceAnalysis.gender == "male") {
+                } else if (faceAnalysis.gender == "female") {
                     if (hairClaspsNameList.includes(imageName)) {
                         const leftPos = landmarks[103];
                         const rightPos = landmarks[67];
