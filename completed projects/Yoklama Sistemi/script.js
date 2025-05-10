@@ -111,13 +111,9 @@ async function FaceMatcher() {
             let student = studentsValue.find(el => el.number === result.label);
 
             if (student) {
-                
                 if ( !yoklama_listesi.find(el=>el.number===student.number) ) {
-                    
                     yoklama_listesi.push(student);
-
                     refreshTable(student);
-              
                 } 
             }
             

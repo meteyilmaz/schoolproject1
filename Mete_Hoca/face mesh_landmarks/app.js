@@ -50,7 +50,7 @@ import { FaceLandmarker, FilesetResolver, DrawingUtils } from "https://cdn.jsdel
                         console.log(landmarks);
                         
                         // drawingUtils.drawConnectors(landmarks, FaceLandmarker.FACE_LANDMARKS_TESSELATION, { color: "#00FF00" });
-                        drawingUtils.drawLandmarks(landmarks, { color: "#FFF", radius: 1 });
+                        drawingUtils.drawLandmarks(landmarks, { color: "#FFF", radius: 0.3 });
                     });
                 }
                 requestAnimationFrame(detectFaces);
