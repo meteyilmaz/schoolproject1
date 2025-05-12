@@ -134,8 +134,8 @@ async function Main() {
                 const indexFingerTip = landmarks[8];
 
                 ctx.beginPath();
-                ctx.arc(thumbFingerTip.x * canvas.width, thumbFingerTip.y * canvas.height, isTouching ? 30 : 15, 0, 2 * Math.PI);
-                ctx.arc(indexFingerTip.x * canvas.width, indexFingerTip.y * canvas.height, isTouching ? 30 : 15, 0, 2 * Math.PI);
+                ctx.arc(thumbFingerTip.x * canvas.width, thumbFingerTip.y * canvas.height, isTouching ? 30 : 10, 0, 2 * Math.PI);
+                ctx.arc(indexFingerTip.x * canvas.width, indexFingerTip.y * canvas.height, isTouching ? 30 : 10, 0, 2 * Math.PI);
                 ctx.fillStyle = isTouching ? "#ab0707" : "red";
                 ctx.fill();
 
@@ -146,7 +146,7 @@ async function Main() {
 
                 drawingUtils.drawConnectors(landmarks, HandLandmarker.HAND_CONNECTIONS, {
                     color: "#00FF00",
-                    lineWidth: 12
+                    lineWidth: 5
                 });
 
                 const canvasRect = canvas.getBoundingClientRect();
