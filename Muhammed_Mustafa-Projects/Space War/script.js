@@ -4,9 +4,6 @@ const video = document.getElementById("video");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-let isTouching = false;
-let canShoot = true;
-
 const enemys = [];
 
 async function SetupCamera() {
@@ -43,7 +40,7 @@ async function LoadHandLandmarker() {
         },
         runningMode: "VIDEO",
         minHandDetectionConfidence: 0.9,
-        numHands: 1,
+        numHands: 1
     });
 }
 
@@ -72,16 +69,12 @@ function CreatePlayer() {
 const player = CreatePlayer();
 
 function Shoot() {
-    if (!canShoot) return;
-    canShoot = false;
-
     const bullet = document.createElement("img");
     bullet.src = "./Images/spaceshipbullet.png";
-    
-    const playerRect = player.getBoundingClientRect();
+
     bullet.style.position = "absolute";
-    bullet.style.left = `${playerRect.left + playerRect.width / 2 - 465}px`;
-    bullet.style.top = `${playerRect.top - 30}px`;
+    bullet.style.left = `${player.offsetLeft + player.offsetWidth / 2 - 34}px`;
+    bullet.style.top = `${player.offsetTop - 30}px`;
     bullet.style.width = "10px";
     bullet.style.height = "30px";
 
@@ -143,8 +136,6 @@ async function Main() {
 
                 if (distance < 0.05) {
                     Shoot();
-                } else if (distance > 0.1) {
-                    canShoot = true;
                 }
             });
         }
