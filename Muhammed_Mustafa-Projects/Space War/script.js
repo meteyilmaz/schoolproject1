@@ -4,6 +4,11 @@ const video = document.getElementById("video");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+const laser_sound = "./sounds/laser-shot-1.mp3";
+const audioPlayer = document.getElementById("audioPlayer");
+audioPlayer.src = laser_sound;
+audioPlayer.load();
+
 const enemys = [];
 
 async function SetupCamera() {
@@ -44,7 +49,7 @@ async function LoadHandLandmarker() {
     });
 }
 
-function CreatePlayer() {
+function createPlayer() {
     const gameContainer = document.querySelector(".game-container");
     const player = document.createElement("div");
     const playerImage = document.createElement("img");
@@ -56,7 +61,7 @@ function CreatePlayer() {
     player.style.height = "80px";
     player.style.transform = "translateX(-50%)";
 
-    playerImage.src = "./Images/spaceship.png";
+    playerImage.src = "./images/spaceship.png";
     playerImage.style.width = "100%";
     playerImage.style.height = "100%";
 
@@ -66,35 +71,35 @@ function CreatePlayer() {
     return player;
 }
 
-const player = CreatePlayer();
+const player = createPlayer();
 
 function Shoot() {
     const bullet = document.createElement("img");
-    bullet.src = "./Images/spaceshipbullet.png";
+    bullet.src = "./images/spaceshipbullet.png";
 
     bullet.style.position = "absolute";
     bullet.style.left = `${player.offsetLeft + player.offsetWidth / 2 - 34}px`;
-    bullet.style.top = `${player.offsetTop - 30}px`;
+    bullet.style.top = `${player.offsetTop + 10}px`;
     bullet.style.width = "10px";
     bullet.style.height = "30px";
 
-    document.querySelector(".game-container").appendChild(bullet);
+    document.querySelector(".game-container").appendChild(bullet);    
 
-    function MoveBullet() {
+    function moveBullet() {
         const bulletTop = parseInt(bullet.style.top);
         if (bulletTop <= 0) {
             bullet.remove();
         } else {
             bullet.style.top = `${bulletTop - 50}px`;
-            CheckCollision(bullet);
-            requestAnimationFrame(MoveBullet);
+            checkCollision(bullet);
+            requestAnimationFrame(moveBullet);
         }
     }
 
-    MoveBullet();
+    moveBullet();
 }
 
-function CheckCollision(bullet) {
+function checkCollision(bullet) {
     const bulletRect = bullet.getBoundingClientRect();
     enemys.forEach((enemy, index) => {
         const enemyRect = enemy.getBoundingClientRect();
@@ -134,8 +139,9 @@ async function Main() {
                     Math.pow(indexFingerTip.y - thumbFingerTip.y, 2)
                 );
 
-                if (distance < 0.05) {
+                if (distance < 0.07) {                    
                     Shoot();
+                    audioPlayer.play();
                 }
             });
         }
@@ -184,7 +190,7 @@ function CreateEnemys() {
         enemy.style.width = "70px";
         enemy.style.height = "70px";
     
-        enemyImage.src = "./Images/meteorite.png";
+        enemyImage.src = "./images/meteorite.png";
         enemyImage.style.width = "100%";
         enemyImage.style.height = "100%";
         
