@@ -5,9 +5,11 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 const laser_sound = "./sounds/laser-shot-1.mp3";
-const audioPlayer = document.getElementById("audioPlayer");
-audioPlayer.src = laser_sound;
-audioPlayer.load();
+const explosion_sound = "./sounds/explosion-1.mp3";
+const audioPlayer1 = document.getElementById("audioPlayer1");
+const audioPlayer2 = document.getElementById("audioPlayer2");
+audioPlayer1.src = laser_sound; audioPlayer1.load();
+audioPlayer2.src = explosion_sound; audioPlayer2.load();
 
 const enemys = [];
 
@@ -112,6 +114,8 @@ function checkCollision(bullet) {
             enemy.remove();
             bullet.remove();
             enemys.splice(index, 1);
+            audioPlayer2.();
+            audioPlayer2.play();
         }
     });
 }
@@ -141,7 +145,7 @@ async function Main() {
 
                 if (distance < 0.07) {                    
                     Shoot();
-                    audioPlayer.play();
+                    audioPlayer1.play();
                 }
             });
         }
@@ -190,7 +194,7 @@ function CreateEnemys() {
         enemy.style.width = "70px";
         enemy.style.height = "70px";
     
-        enemyImage.src = "./images/meteorite.png";
+        enemyImage.src = "./images/meteor_"+randomNumber(1,2)+".png";
         enemyImage.style.width = "100%";
         enemyImage.style.height = "100%";
         
@@ -207,3 +211,8 @@ function CreateEnemys() {
 }
 
 CreateEnemys();
+
+function randomNumber(min, max) {
+//   return Math.floor(Math.random() * (max - min) + min);
+  return Math.floor(Math.random() * max + min);
+}
