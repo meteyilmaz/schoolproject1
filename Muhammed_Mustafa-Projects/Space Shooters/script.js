@@ -4,6 +4,13 @@ const video = document.getElementById("video");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+const laser_sound = "./sounds/laser_shot-1.mp3";
+const explosion_sound = "./sounds/explosion-1.mp3";
+const audioPlayer1 = document.getElementById("audioPlayer1");
+const audioPlayer2 = document.getElementById("audioPlayer2");
+audioPlayer1.src = laser_sound; audioPlayer1.load();
+audioPlayer2.src = explosion_sound; audioPlayer2.load();
+
 const enemys = [];
 
 let lastShootTime = 0;
@@ -59,7 +66,7 @@ function CreatePlayer() {
     player.style.height = "80px";
     player.style.transform = "translateX(-50%)";
 
-    playerImage.src = "./Images/spaceship.png";
+    playerImage.src = "./images/spaceship.png";
     playerImage.style.width = "100%";
     playerImage.style.height = "100%";
 
@@ -71,14 +78,14 @@ function CreatePlayer() {
 
 const player = CreatePlayer();
 
-function Shoot() {
+function shoot() {
     const currentTime = Date.now();
     if (currentTime - lastShootTime < shootInterval) return;
 
     lastShootTime = currentTime;
 
     const bullet = document.createElement("img");
-    bullet.src = "./Images/spaceshipbullet.png";
+    bullet.src = "./images/spaceshipbullet.png";
 
     bullet.style.position = "absolute";
     bullet.style.left = `${player.offsetLeft + player.offsetWidth / 2 - 34}px`;
@@ -118,6 +125,7 @@ function CheckCollision(bullet) {
             enemy.remove();
             bullet.remove();
             enemys.splice(index, 1);
+            audioPlayer2.play();
         }
     });
 }
@@ -152,7 +160,8 @@ async function Main() {
                 );
 
                 if (middleFingerDistance < 0.07 && ringFingerTipDistance < 0.07) {                    
-                    Shoot();
+                    shoot();
+                    audioPlayer1.play();
                 }
             });
         }
@@ -201,7 +210,7 @@ function CreateEnemys() {
         enemy.style.width = "70px";
         enemy.style.height = "70px";
     
-        enemyImage.src = "./Images/meteorite" + RandomNumber(1,2) + ".png";
+        enemyImage.src = "./images/meteorite-" + randomNumber(1,2) + ".png";
         enemyImage.style.width = "100%";
         enemyImage.style.height = "100%";
         
@@ -219,6 +228,6 @@ function CreateEnemys() {
 
 CreateEnemys();
 
-function RandomNumber(min, max) {
+function randomNumber(min, max) {
   return Math.floor(Math.random() * max + min);
 }
