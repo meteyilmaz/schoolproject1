@@ -4,6 +4,9 @@ const video = document.getElementById("video");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+const messageImage = document.getElementById("messageImage");
+const messageBox = document.getElementById("messageBox");
+
 const shootSound = new Audio("./sounds/laserShoot1.mp3");
 const explosionSound = new Audio("./sounds/explosion1.mp3");
 
@@ -165,6 +168,13 @@ async function main() {
 
         if (enemys.length <= 0) {
             createEnemys();
+            messageImage.style.visibility = "visible";
+            messageBox.style.visibility = "visible";
+
+            setTimeout(() => {
+                messageImage.style.visibility = "hidden";
+                messageBox.style.visibility = "hidden";
+            }, 1000);
         }
 
         requestAnimationFrame(detectHands);
