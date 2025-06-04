@@ -65,10 +65,39 @@
       filter: "FlipH";
       -ms-filter: "FlipH";
     }
+
+    #messageImage {
+      position: absolute;
+      right: 225px;
+      top: 50%;
+      transform: translateY(-50%) rotate(45deg);
+      width: 200px;
+      height: auto;
+      z-index: 0;
+      visibility: hidden;
+    }
+
+    #messageBox {
+      position: absolute;
+      right: 225px;
+      top: 40%;
+      transform: translateY(-50%) rotate(25deg);
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 15px 20px;
+      border-radius: 10px;
+      font-size: 18px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      z-index: 0;
+      visibility: hidden;
+    }
   </style>
   <script type="module" src="./script.js"></script>
 </head> 
 <body>
+<img id="messageImage" src="images/khontkarImage.png">
+<div id="messageBox">Bravo</div>
 <div class="game-container">
   <video id="video" autoplay sinline width="1200" height="800" style="display: none;"></video>
   <canvas id="canvas" width="1200" height="800"></canvas>
