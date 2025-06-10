@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Balloon Shooter</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #1e1e2f;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      flex-direction: column;
+    }
+
+    .game-container {
+      position: relative;
+      z-index: 1;
+      background: #2c2c3e;
+      padding: 30px;
+      border-radius: 25px;
+      text-align: center;
+      max-width: 800px;
+      max-height: 640px;
+      width: 800px;
+      height: 640px;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
+      overflow: hidden;
+    }
+
+    #video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+      -moz-transform: scaleX(-1);
+      -o-transform: scaleX(-1);
+      -webkit-transform: scaleX(-1);
+      transform: scaleX(-1);
+      filter: "FlipH";
+      -ms-filter: "FlipH";
+    }
+
+    .ball {
+      position: absolute;
+      border-radius: 100%;
+      opacity: 0.7;
+    }
+
+    .heart {
+      --c: red;
+      width: 50px;
+      aspect-ratio: 1;
+      background:
+      radial-gradient(circle at 60% 65%,var(--c) 64%,#0000 65%) top left/50% 50%,
+      radial-gradient(circle at 40% 65%,var(--c) 64%,#0000 65%) top right/50% 50%,
+      conic-gradient(from -45deg at 50% 85.5%,var(--c) 90deg,#0000 0) bottom/100% 50%;
+      background-repeat: no-repeat;
+    }
+
+    .info-box {
+      position: absolute;
+      top: 50%;
+      left: 30px;
+      transform: translateY(-50%);
+      width: 300px;
+      padding: 20px;
+      background-color: #2c2c3e;
+      color: #fff;
+      font-size: 13px;
+      border-radius: 20px;
+      line-height: 1.6;
+      z-index: 10;
+    }
+
+    .avatar-box {
+      position: absolute;
+      top: 50%;
+      right: 100px;
+      transform: translateY(-50%);
+      width: 180px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 10;
+      visibility: hidden;
+    }
+
+    .speech-bubble {
+      background-color: #ff5252;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 15px;
+      font-size: 14px;
+      margin-bottom: 10px;
+      text-align: center;
+      position: relative;
+    }
+
+    .speech-bubble::after {
+      content: "";
+      position: absolute;
+      bottom: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 10px;
+      border-style: solid;
+      border-color: #ff5252 transparent transparent transparent;
+    }
+
+    .avatar-box img {
+      width: 225px;
+      height: 225px;
+      border-radius: 50%;
+      object-fit: contain;
+      border: 3px solid #ff5252;
+      margin-bottom: 8px;
+      box-shadow: 0 8px 20px rgba(255, 82, 82, 0.6);
+    }
+
+    .avatar-name {
+      color: #fff;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    @keyframes explode {
+      0% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(0.5);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(0);
+      }
+    }
+
+    .explode {
+      animation: explode 0.4s ease-out forwards;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    .particle {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      background-color: white;
+      border-radius: 50%;
+      opacity: 0.8;
+      animation: particle-explode 0.6s ease-out forwards;
+    }
+
+    @keyframes particle-explode {
+      0% {
+        opacity: 0.8;
+        transform: translate(0, 0) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(var(--dx), var(--dy)) scale(0);
+      }
+    }
+  </style>
+  <script type="module" src="./script.js"></script>
+</head>
+<body>
+<div style="display: flex; align-items: center;">
+  <p style="margin-top: 10px; font-size: 16px; color: #ffffff; text-align: center; margin-right: 20px;">Haydi<br>balonu patlat!</p>
+  <p style="margin-top: 20px; font-size: 30px; color: #ffffff; text-align: center; margin-right: 20px;">=></p>
+  <div style="display: flex; flex-direction: column; align-items: center; width: 100px; height: 100px; background-color: #2c2c3e; border-radius: 25%;">
+    <div id="targetBalloonImage" style="width: 70px; height: 70px; background-color: red; border-radius: 50%; margin-top: 15px;"></div>
+  </div>
+  <h2 id="scoreText" style="font-size: 40px; margin-left: 100px; margin-right: 150px;">Puan: 0</h2>
+  <p id="heartNumberText" style="font-size: 30px; margin-right: 10px;">10</p>
+  <div class="heart"></div>
+</div>
+<div class="game-container">
+  <video id="video" autoplay sinline width="800" height="640" style="display: none;"></video>
+  <canvas id="canvas" width="800" height="640"></canvas>
+</div>
+<div class="info-box">
+  <h2 style="margin-top: 0; color: #ff5252;">🎮 Balloon Shooter</h2>
+  <p>Elinle hedefleri patlat, reflekslerini sınırla!</p>
+  <p>Balloon Shooter, gerçek zamanlı el hareketleriyle oynanan interaktif bir refleks oyunudur. Kamera, parmak hareketlerini algılar ve seni fiziksel olarak oyunla buluşturur!</p>
+  <p>🧠 Nasıl Oynanır?
+  İşaret ve baş parmağını birleştirerek hedefleri patlat.
+  Doğru hedefleri seç, görevi tamamla!</p>
+  <p>🎯 Görev Modları:
+  Hedef Görevi: Belirtilen renkteki hedeften doğru olanı patlat!</p>
+  <p>💥 Efekt ve Sesler:
+  Her patlamada özel animasyonlar ve parçacık efektleri.
+  Her hedef tipi için farklı ses efektleri!</p>
+  <p>🌟 Neden Oynanmalı?
+
+  Reflekslerini geliştirir.
+
+  Hızlı düşünme ve karar verme becerisi kazandırır.
+
+  Temassız, interaktif ve eğlenceli bir deneyim sunar.</p>
+</div>
+<div class="avatar-box">
+  <div class="speech-bubble" id="avatarLine"></div>
+  <img id="avatarImage" src="" alt="Avatar" />
+  <div class="avatar-name" id="avatarName"></div>
+</div>
+<h1 id="highScoreText" style="font-size: 30px;">En yüksek skor: 0</h1>
+<h1 style="font-size: 30px;">Atatürk Mesleki ve Teknik Anadolu Lisesi</h1>
+</body>
+</html>
