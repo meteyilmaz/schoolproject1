@@ -6,16 +6,40 @@
     <title>Timer</title>
     <style>
         body {
-            font-family: sans-serif;
-            display: grid;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             height: 100vh;
-            place-items: center;
+            background: linear-gradient(to right, #141e30, #243b55);
+            color: white;
+            margin: 0;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+        }
+
+        .text-display {
+            margin-bottom: 20px;
+            padding: 15px 20px;
+            font-size: 18px;
+            width: 600px;
+            max-width: 90%;
+            text-align: center;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
         }
 
         .base-timer {
             position: relative;
             width: 300px;
             height: 300px;
+            margin-bottom: 20px;
         }
 
         .base-timer__svg {
@@ -29,7 +53,7 @@
 
         .base-timer__path-elapsed {
             stroke-width: 7px;
-            stroke: grey;
+            stroke: #404040;
         }
 
         .base-timer__path-remaining {
@@ -40,64 +64,64 @@
             transition: 1s linear all;
             fill-rule: nonzero;
             stroke: currentColor;
+            filter: drop-shadow(0 0 6px currentColor);
         }
 
         .base-timer__path-remaining.green {
-            color: rgb(65, 184, 131);
+            color: #00e676;
         }
 
         .base-timer__path-remaining.orange {
-            color: orange;
+            color: #ff9800;
         }
 
         .base-timer__path-remaining.red {
-            color: red;
+            color: #f44336;
         }
 
         .base-timer__label {
             position: absolute;
-            width: 300px;
-            height: 300px;
+            width: 100%;
+            height: 100%;
             top: 0;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 48px;
+            font-weight: bold;
+            text-shadow: 0 0 10px #000;
         }
 
         .button-container {
             display: flex;
-            justify-content: space-between;
-            width: 300px;
-            margin-top: 20px;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 10px;
         }
 
         .button-container button {
-            padding: 10px 20px;
+            padding: 10px 25px;
             font-size: 16px;
             border: none;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+
+        .button-container button:hover {
+            transform: scale(1.05);
         }
 
         .skip-button {
-            background-color: #f44336;
+            background-color: #e53935;
             color: white;
         }
 
         .extra-time-button {
-            background-color: #4CAF50;
+            background-color: #43a047;
             color: white;
-        }
-
-        .text-display {
-            margin-bottom: 20px;
-            padding: 10px;
-            font-size: 18px;
-            width: 800px;
-            text-align: center;
-            border-radius: 5px;
-            background-color: #f1f1f1;
         }
     </style>
 </head>

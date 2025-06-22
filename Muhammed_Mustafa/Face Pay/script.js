@@ -117,7 +117,9 @@ async function faceMatcher() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         const result = faceMatcher.findBestMatch(resizedDetections.descriptor);
-        let label = usersValue[result.label];
+        let userKey = result.label;
+        let storedUser = JSON.parse(localStorage.getItem(`user_${userKey}`));
+        let label = storedUser || usersValue[userKey];
         const box = resizedDetections.detection.box;
 
         let isFaceInside = (
@@ -145,6 +147,7 @@ async function faceMatcher() {
 
                         if (label.balance >= cutAmount) {
                             label.balance -= cutAmount;
+                            localStorage.setItem(`user_${userKey}`, JSON.stringify(label));
                             localStorage.setItem("result", `✅ ${cutAmount} TL kesildi. Yeni bakiye: ${label.balance} TL`);
                         } else {
                             localStorage.setItem("result", "❌ Bakiyeniz yetersiz!!!");
