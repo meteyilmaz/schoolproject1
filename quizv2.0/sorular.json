@@ -1,0 +1,158 @@
+{
+  "matematik": [
+    {
+      "question": "5 + 7 kaçtır?",
+      "options": ["10", "12"],
+      "correct": 1
+    },
+    {
+      "question": "9 - 3 kaçtır?",
+      "options": ["4", "6"],
+      "correct": 1
+    },
+    {
+      "question": "4 × 3 kaçtır?",
+      "options": ["7", "12"],
+      "correct": 1
+    },
+    {
+      "question": "15 ÷ 5 kaçtır?",
+      "options": ["3", "5"],
+      "correct": 0
+    },
+    {
+      "question": "Bir düzine kaç adettir?",
+      "options": ["10", "12"],
+      "correct": 1
+    },
+    {
+      "question": "8 + 6 kaçtır?",
+      "options": ["13", "14"],
+      "correct": 1
+    },
+    {
+      "question": "20 - 8 kaçtır?",
+      "options": ["11", "12"],
+      "correct": 1
+    },
+    {
+      "question": "5 × 4 kaçtır?",
+      "options": ["18", "20"],
+      "correct": 1
+    },
+    {
+      "question": "18 ÷ 3 kaçtır?",
+      "options": ["5", "6"],
+      "correct": 1
+    },
+    {
+      "question": "Bir saat kaç dakikadır?",
+      "options": ["50", "60"],
+      "correct": 1
+    }
+  ],
+  "fen": [
+    {
+      "question": "Güneş sistemimizdeki gezegen sayısı kaçtır?",
+      "options": ["8", "9"],
+      "correct": 0
+    },
+    {
+      "question": "Hangi hayvan memelidir?",
+      "options": ["Köpekbalığı", "Yunus"],
+      "correct": 1
+    },
+    {
+      "question": "Bitkiler ne ile besin üretir?",
+      "options": ["Kök", "Yaprak"],
+      "correct": 1
+    },
+    {
+      "question": "Su kaç derecede kaynar?",
+      "options": ["75°C", "100°C"],
+      "correct": 1
+    },
+    {
+      "question": "Hangisi bir kuvvet birimidir?",
+      "options": ["Newton", "Litre"],
+      "correct": 0
+    },
+    {
+      "question": "Hangi madde sıvıdır?",
+      "options": ["Tahta", "Su"],
+      "correct": 1
+    },
+    {
+      "question": "Dünya'nın uydusu nedir?",
+      "options": ["Venüs", "Ay"],
+      "correct": 1
+    },
+    {
+      "question": "Hangisi bir elektrik kaynağıdır?",
+      "options": ["Pil", "Sandalye"],
+      "correct": 0
+    },
+    {
+      "question": "Hangi organ nefes almamızı sağlar?",
+      "options": ["Kalp", "Akciğer"],
+      "correct": 1
+    },
+    {
+      "question": "Hangisi bir ışık kaynağıdır?",
+      "options": ["Ayna", "Ampul"],
+      "correct": 1
+    }
+  ],
+  "turkce": [
+    {
+      "question": "Türkiye'nin başkenti neresidir?",
+      "options": ["İstanbul", "Ankara"],
+      "correct": 1
+    },
+    {
+      "question": "Hangisi bir noktalama işareti değildir?",
+      "options": ["Nokta", "Harfler"],
+      "correct": 1
+    },
+    {
+      "question": "'Kitap' kelimesinin eş anlamlısı nedir?",
+      "options": ["Defter", "Roman"],
+      "correct": 1
+    },
+    {
+      "question": "Hangi kelime büyük harfle başlamaz?",
+      "options": ["ankara", "İstanbul"],
+      "correct": 0
+    },
+    {
+      "question": "'Koşmak' fiilinin şimdiki zamanı nedir?",
+      "options": ["Koşuyor", "Koştu"],
+      "correct": 0
+    },
+    {
+      "question": "Hangisi birleşik kelimedir?",
+      "options": ["Ev", "Hanımeli"],
+      "correct": 1
+    },
+    {
+      "question": "Alfabemizde kaç harf vardır?",
+      "options": ["28", "29"],
+      "correct": 1
+    },
+    {
+      "question": "Hangisi bir yazım yanlışıdır?",
+      "options": ["Telefon", "Telafuz"],
+      "correct": 1
+    },
+    {
+      "question": "Hangi cümle olumludur?",
+      "options": ["Gitmeyecek.", "Okuyor."],
+      "correct": 1
+    },
+    {
+      "question": "'Yavru' kelimesinin zıt anlamlısı nedir?",
+      "options": ["Yetişkin", "Anne"],
+      "correct": 0
+    }
+  ]
+}
