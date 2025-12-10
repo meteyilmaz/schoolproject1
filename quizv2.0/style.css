@@ -18,6 +18,11 @@ html, body {
   font-family:'Fredoka', sans-serif;
 }
 
+canvas {
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+}
+
 /* FULL SCREEN */
 body {
   background: linear-gradient(180deg, var(--c1), var(--c2));
